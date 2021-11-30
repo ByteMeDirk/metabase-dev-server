@@ -1,21 +1,11 @@
 # metabase-dev-server
 A Dockerized Metabase Server for development.
 
-The metabase.env:
+The .env:
 ```dotenv
-ENV MB_DB_TYPE=postgres
-ENV MB_DB_DBNAME=metabase
-ENV MB_DB_PORT=54320
-ENV MB_DB_USER=metabase
-ENV MB_DB_PASS=metabase
-ENV MB_DB_HOST=<ip address for the Metabase database server>
-ENV MB_ENCRYPTION_SECRET_KEY=<random string>
+METABASE_ENCRYPTION_KEY=admin1234
+POSTGRES_PASSWORD=admin1234
+POSTGRES_ADMIN_PASSWORD=admin1234
 ```
 
-The postgres.env:
-```dotenv
-POSTGRES_PASSWORD=<password for postgres user>
-METABASE_PASSWORD=<password for metabase user>
-```
-
-To launch locally run `docker-compose up -d`
+To launch locally run `docker-compose -f docker-compose.yml up --build`

@@ -1,29 +1,40 @@
-version: "3"
+version: "3.5"
 
-# All available services
 services:
-
-  # Misc Storage
   postgres:
-    container_name: "postgres"
-    restart: "always"
     image: postgres:10
-    env_file:
-      - postgres.env
     volumes:
-      - postgres_volume:/var/lib/postgresql/data/
-      - ./services/postgres/:/docker-entrypoint-initdb.d/
-    ports:
-      - 54320:5432
+      - "./db_data:/var/lib/postgresql/data"
+    restart: always
+    environment:
+      POSTGRES_DB: metabase
+      POSTGRES_USER: metabase_usr
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   metabase:
-    container_name: "metabase"
-    restart: "always"
-    image: metabase/metabase:v0.41.0
-    env_file:
-      - metabase.env
+    depends_on:
+      - postgres
+    image: metabase/metabase
     ports:
-      - 3000:3000
+      - "8080:8080"
+    restart: always
+    environment:
+      JAVA_TIMEZONE: Africa/Johannesburg
+      MB_ENCRYPTION_SECRET_KEY: ${METABASE_ENCRYPTION_KEY}
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: metabase_usr
+      MB_DB_PASS: ${POSTGRES_PASSWORD}
+      MB_DB_HOST: postgres
 
-volumes:
-  postgres_volume:
+  postgress_admin:
+    depends_on:
+      - postgres
+    image: dpage/pgadmin4
+    ports:
+      - "3001:80"
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_ADMIN_PASSWORD}
