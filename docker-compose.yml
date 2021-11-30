@@ -16,7 +16,7 @@ services:
       - postgres
     image: metabase/metabase
     ports:
-      - "8080:8080"
+      - "3000:3000"
     restart: always
     environment:
       JAVA_TIMEZONE: Africa/Johannesburg
