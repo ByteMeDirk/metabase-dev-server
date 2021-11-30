@@ -1,0 +1,29 @@
+version: "3"
+
+# All available services
+services:
+
+  # Misc Storage
+  postgres:
+    container_name: "postgres"
+    restart: "always"
+    image: postgres:10
+    env_file:
+      - postgres.env
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+      - ./services/postgres/:/docker-entrypoint-initdb.d/
+    ports:
+      - 54320:5432
+
+  metabase:
+    container_name: "metabase"
+    restart: "always"
+    image: metabase/metabase:v0.41.0
+    env_file:
+      - metabase.env
+    ports:
+      - 3000:3000
+
+volumes:
+  postgres_volume:
